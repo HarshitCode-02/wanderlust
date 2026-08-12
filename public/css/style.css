@@ -1,0 +1,92 @@
+html,
+body {
+  min-height: 100vh;
+}
+body {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  padding-top: 5rem; /* Match your navbar height */
+}
+main.container {
+  flex: 1;
+}
+.navbar {
+  height: 5rem;
+  background-color: white;
+}
+.fa-globe {
+  color: red;
+  font-size: 3rem;
+}
+.nav-link {
+  font-weight: bold !important ;
+  color: black !important;
+}
+.f-info-links a {
+  text-decoration: none;
+  color: black;
+}
+.f-info-links a:hover {
+  text-decoration: underline;
+}
+.f-info-links {
+  width: 100%;
+}
+.f-info-socials {
+  width: 100%;
+  font-size: 2rem;
+}
+.f-info {
+  text-align: center;
+  display: flex;
+  height: 8rem;
+  background-color: beige;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: space-evenly;
+}
+.card {
+  border: none !important;
+  margin-bottom: 2rem;
+}
+
+.card-img-top {
+  border-radius: 1rem !important;
+  width: 100% !important;
+  object-fit: cover !important;
+}
+body {
+  padding-top: 5rem; /* Match your navbar height */
+}
+.card-text {
+  font-weight: 0px !important;
+}
+.listing-clickbtn {
+  text-decoration: none;
+}
+.card-img-overlay {
+  opacity: 0;
+}
+.card:hover .card-img-overlay {
+  opacity: 0.3;
+  background-color: rgb(247, 244, 244);
+}
+.btn {
+  background-color: rgb(0, 0, 0) !important;
+  border: none !important;
+}
+.edit-btn {
+  background-color: rgb(0, 0, 0) !important;
+  border: none !important;
+}
+.show-img {
+  height: 30vh;
+}
+.btns {
+  display: flex;
+}
+.show-card {
+  padding-left: 0;
+  padding-right: 0;
+}

@@ -1,0 +1,37 @@
+<div class="row">
+  <div class="col-8">
+    <h3>Edit your Listing</h3>
+    <form class="needs-validation" method="POST" action="/listings/<%= listing._id %>?_method=PUT" novalidate>
+
+      <div class="mb-3">
+        <label for="Title" class="form-label">Title</label>
+        <input name="listing[title]" class="form-control" value="<%= listing.title %>" type="text" required />
+      </div>
+      <div class="mb-3">
+        <label for="Description" class="form-label">Description</label>
+        <textarea name="listing[description]" class="form-control" required><%= listing.description %></textarea>
+      </div>
+      <div class="mb-3">
+        <label for="Image" class="form-label">Image Link</label>
+        <input name="listing[image]" value="<%= listing.image %>" type="text" class="form-control" required />
+      </div>
+      <div class="row">
+        <div class="mb-3 col-md-4 ">
+          <label for="Price" class="form-label">Price</label>
+          <input name="listing[price]" value="<%= listing.price %>" type="number" class="form-control" required />
+        </div>
+        <div class="mb-3 col-md-8">
+          <label for="Country" class="form-label">Country</label>
+          <input name="listing[country]" value="<%= listing.country %>" type="text" class="form-control" required />
+        </div>
+      </div>
+      <div class="mb-3">
+        <label for="Location" class="form-label">Location</label>
+        <input name="listing[location]" value="<%= listing.location %>" type="text" class="form-control" required />
+      </div>
+      </br></br>
+      <button class="btn btn-dark edit-btn">Edit</button>
+    </form>
+  </div>
+</div>
+<script src="/js/script.js"></script>

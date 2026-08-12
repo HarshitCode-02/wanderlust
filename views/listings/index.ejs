@@ -1,0 +1,30 @@
+<body>
+  <h3>All Listings</h3>
+  <form method="GET" action="/listings/new">
+  </form>
+  <div class="row row-cols-lg-3 row-cols-md-2 row-cols-sm-1">
+    <% for(let listing of allListings) { %>
+      <a class="listing-clickbtn" href="/listings/<%= listing._id%>">
+        <div class="card col ">
+          <img src="<%= listing.image.url %>" class="card-img-top" alt="listing_image" style="height:20rem">
+          <div class="card-img-overlay">
+            last updates 2 min ago if u want to book this property then book it now otherwise
+            it will be booked by others
+          </div>
+          <div class="card-body">
+            <h5 class="card-title">
+              <%= listing.title %>
+            </h5>
+            <p class="card-text">
+              <%= listing.description %>
+            </p>
+            <p class="card-text">Price: ₹<%= listing.price %>
+            </p>
+            <p class="card-text">Location: <%= listing.location %>, <%= listing.country %>
+            </p>
+          </div>
+        </div>
+      </a>
+      <% } %>
+  </div>
+</body>
