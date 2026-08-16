@@ -1,29 +1,173 @@
+<!-- LISTING DISPLAY -->
 <div class="row mt-3">
   <div class="col-8 offset-2">
-    <h3>Listing Details</h3>
+    <h3>
+      <%= listing.title %>
+    </h3>
   </div>
+
   <div class="card col-6 offset-3 show-card">
 
-    <img src="<%= listing.image.url %>" class="card-img-top show-img" alt="listing_Image" />
+    <img
+      src="<%= listing.image && listing.image.url ? listing.image.url : 'https://images.unsplash.com/photo-1596436889106-be35e843f974' %>"
+      class="card-img-top show-img"
+      alt="listing_image"
+    />
+
     <div class="card-body">
       <p class="card-text">
-        <b>
-          <%= listing.title %><br>
-        </b>
-        <%= listing.description %> <br>
-         ₹<%= listing.price.toLocaleString("en-IN") %><br>
-            <%= listing.location %><br>
-              <%= listing.country %><br>
+        <%= listing.description %>
+        <br>
+
+        ₹<%= listing.price.toLocaleString("en-IN") %>
+        / night
+        <br>
+
+        <%= listing.location %>
+        <br>
+
+        <%= listing.country %>
+        <br>
       </p>
     </div>
+
   </div>
 </div>
 
 
-<div class="btns">
-  <a href="/listings/<%= listing._id %>/edit" class="btn btn-dark col-1 offset-3">Edit</a>
+<!-- EDIT & DELETE BUTTONS -->
+<div class="btns mt-3">
 
-  <form method="POST" action="/listings/<%=listing._id%>?_method=DELETE">
-    <button class="btn btn-dark offset-5">Delete </button>
+  <a
+    href="/listings/<%= listing._id %>/edit"
+    class="btn btn-dark col-1 offset-3"
+  >
+    Edit
+  </a>
+
+  <form
+    method="POST"
+    action="/listings/<%= listing._id %>?_method=DELETE"
+    class="d-inline"
+  >
+    <button class="btn btn-dark offset-5">
+      Delete
+    </button>
   </form>
+
+</div>
+
+
+<!-- REVIEW FORM -->
+<div class="col-8 offset-3 mb-3">
+
+  <hr>
+
+  <h4>Leave a Review</h4>
+
+  <form
+    action="/listings/<%= listing._id %>/reviews"
+    method="POST"
+  >
+
+    <!-- Rating -->
+    <div class="mb-3 mt-3">
+
+      <label for="rating" class="form-label">
+        Rating
+      </label>
+
+      <input
+        type="range"
+        min="1"
+        max="5"
+        value="1"
+        id="rating"
+        name="review[rating]"
+        class="form-range"
+        required
+      >
+
+    </div>
+
+
+    <!-- Comment -->
+    <div class="mb-3 mt-3">
+
+      <label for="comment" class="form-label">
+        Comments
+      </label>
+
+      <textarea
+        name="review[comment]"
+        id="comment"
+        cols="30"
+        rows="5"
+        class="form-control"
+        required
+        minlength="5"
+      ></textarea>
+
+    </div>
+
+
+    <button class="btn btn-outline-dark">
+      Submit
+    </button>
+
+  </form>
+
+</div>
+
+
+<!-- ALL REVIEWS -->
+<div class="col-8 offset-3 mb-5">
+
+  <hr>
+
+  <h4>All Reviews</h4>
+
+  <% if (listing.reviews && listing.reviews.length > 0) { %>
+
+    <% for (let review of listing.reviews) { %>
+
+      <div class="card mb-3 shadow-sm">
+
+        <div class="card-body">
+
+          <h6 class="card-subtitle mb-2 text-muted">
+            Rating: <%= review.rating %> / 5
+          </h6>
+
+          <p class="card-text">
+            <%= review.comment %>
+          </p>
+
+
+          <!-- DELETE REVIEW -->
+          <form
+            method="POST"
+            action="/listings/<%= listing._id %>/reviews/<%= review._id %>?_method=DELETE"
+          >
+
+            <button class="btn btn-sm btn-dark">
+              Delete
+            </button>
+
+          </form>
+
+        </div>
+
+      </div>
+
+    <% } %>
+
+  <% } else { %>
+
+    <p class="text-muted">
+      No reviews yet. Be the first to review!
+    </p>
+
+  <% } %>
+
 </div>

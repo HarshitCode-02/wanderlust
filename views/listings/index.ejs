@@ -1,30 +1,40 @@
-<body>
-  <h3>All Listings</h3>
-  <form method="GET" action="/listings/new">
-  </form>
-  <div class="row row-cols-lg-3 row-cols-md-2 row-cols-sm-1">
-    <% for(let listing of allListings) { %>
-      <a class="listing-clickbtn" href="/listings/<%= listing._id%>">
-        <div class="card col ">
-          <img src="<%= listing.image.url %>" class="card-img-top" alt="listing_image" style="height:20rem">
-          <div class="card-img-overlay">
-            last updates 2 min ago if u want to book this property then book it now otherwise
-            it will be booked by others
-          </div>
-          <div class="card-body">
-            <h5 class="card-title">
-              <%= listing.title %>
-            </h5>
-            <p class="card-text">
-              <%= listing.description %>
-            </p>
-            <p class="card-text">Price: ₹<%= listing.price %>
-            </p>
-            <p class="card-text">Location: <%= listing.location %>, <%= listing.country %>
-            </p>
-          </div>
-        </div>
-      </a>
-      <% } %>
-  </div>
-</body>
+<!-- Navbar Include -->
+<%- include("../../views/includes/navbar") %>
+
+<div class="container mt-5">
+    <h3 class="mb-4">All Listings</h3>
+
+    <div class="row row-cols-lg-3 row-cols-md-2 row-cols-sm-1 g-4">
+        <% for(let listing of allListings) { %>
+            <div class="col">
+                <a class="listing-clickbtn text-decoration-none text-dark" href="/listings/<%= listing._id%>">
+                    <div class="card h-100 shadow-sm">
+                        <!-- ✅ FIXED: Added a fallback if image or image.url is missing -->
+                        <img src="<%= listing.image && listing.image.url ? listing.image.url : 'https://images.unsplash.com/photo-1596436889106-be35e843f974' %>" 
+                             class="card-img-top" 
+                             alt="listing_image"
+                             style="height:20rem; object-fit: cover;">
+
+                        <div class="card-img-overlay bg-dark bg-opacity-50 text-white d-none d-md-block">
+                            <small>Last updates 2 min ago. Book now!</small>
+                        </div>
+
+                        <div class="card-body">
+                            <h5 class="card-title fw-bold">
+                                <%= listing.title %>
+                            </h5>
+                            <p class="card-text text-muted">
+                                <%= listing.description ? listing.description.substring(0, 60) : 'No description yet' %>...
+                            </p>
+                            <p class="card-text fw-bold text-success">₹<%= listing.price || 0 %> / night</p>
+                            <p class="card-text text-secondary small">
+                                <i class="fas fa-map-marker-alt"></i>
+                                <%= listing.location %>, <%= listing.country %>
+                            </p>
+                        </div>
+                    </div>
+                </a>
+            </div>
+        <% } %>
+    </div>
+</div>

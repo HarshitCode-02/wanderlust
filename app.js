@@ -1,138 +1,112 @@
 const express = require("express");
 const app = express();
 const mongoose = require("mongoose");
-const Listing = require("./models/listing.js");
-const { initDB } = require("./init/index.js");
 const path = require("path");
 const methodOverride = require("method-override");
-const wrapAsync = require("./utils/wrapAsync.js");
+const session = require("express-session");
+const flash = require("connect-flash");
+const passport = require("passport");
+const LocalStrategy = require("passport-local")
 const ExpressError = require("./utils/ExpressError.js");
-const { listingSchema } = require("./schema.js")
-
-
+const listingRouter = require("./routes/listing.js");
+const User = require("./models/user.js");
+const reviewRouter = require("./routes/review.js");
 const MONGO_URL = "mongodb://127.0.0.1:27017/wanderlust";
 
-main()
-  .then(() => {
-    console.log("connected to DB");
-  })
-  .catch((err) => {
-    console.log(err);
-  });
 
+// Database Connection
 async function main() {
-  await mongoose.connect(MONGO_URL);
-  await seedDBIfEmpty();
+    await mongoose.connect(MONGO_URL);
+    console.log("connected to DB");
 }
 
-async function seedDBIfEmpty() {
-  const count = await Listing.countDocuments();
-  if (count === 0) {
-    await initDB();
-  }
-}
+main().catch((err) => {
+    console.log("Database connection error:", err);
+});
 
+
+// App Configuration
 app.set("view engine", "ejs");
 app.set("views", path.join(__dirname, "views"));
+
+
+// Middleware
 app.use(express.urlencoded({ extended: true }));
 app.use(methodOverride("_method"));
 app.use(express.static(path.join(__dirname, "public")));
 
-function renderWithLayout(res, view, props = {}) {
-  res.render(view, props, (err, html) => {
-    if (err) {
-      return res.status(500).send(err.message);
-    }
-    res.render("layouts/boilerplate", { body: html });
-  });
-}
 
-app.get("/", (req, res) => {
-  res.send("Hi, I am root");
-});
-
-const validateListing = (req, res, next) => {
-  let { error } = listingSchema.validate(req.body);
-  if (error) {
-    let errMsg = error.details.map((el) => el.message).join(",");
-    throw new ExpressError(400, errMsg);
-  }
-  else {
-    next();
-  }
+// Session & Flash
+const sessionOptions = {
+    secret: "mysupersecretcode",
+    resave: false,
+    saveUninitialized: true,
+    cookie: {
+        expires: Date.now() + 7 * 24 * 60 * 60 * 1000,
+        maxAge: 7 * 24 * 60 * 60 * 1000,
+    },
 };
 
-//Index Route
-app.get("/listings", validateListing, wrapAsync(async (req, res, next) => {
-  const allListings = await Listing.find({});
-  renderWithLayout(res, "listings/index", { allListings });
-}));
-
-//New Route
-app.get("/listings/new", validateListing, (req, res) => {
-  renderWithLayout(res, "listings/new");
+// Routes
+app.get("/", (req, res) => {
+    res.send("Hi, I am root");
 });
 
-//Show Route
-app.get("/listings/:id", validateListing, wrapAsync(async (req, res, next) => {
-  let { id } = req.params;
-  const listing = await Listing.findById(id);
-  renderWithLayout(res, "listings/show", { listing });
-}));
+app.use(session(sessionOptions));
+app.use(flash());
 
-//Create Route
-app.post("/listings", validateListing, wrapAsync(async (req, res, next) => {
-  const newListing = new Listing(req.body.listing);
-  await newListing.save();
-  res.redirect("/listings");
-})
-);
+app.use(passport.initialize());
+app.use(passport.session());
+passport.use(new LocalStrategy(User.authenticate()));
 
-//Edit Route
-app.get("/listings/:id/edit", validateListing, wrapAsync(async (req, res, next) => {
-  let { id } = req.params;
-  const listing = await Listing.findById(id);
-  renderWithLayout(res, "listings/edit", { listing });
-}));
+passport.serializeUser(User.serializeUser());
+passport.deserializeUser(User.deserializeUser());
 
-//Update Route
-app.put("/listings/:id", validateListing, wrapAsync(async (req, res, next) => {
-  let { id } = req.params;
-  const listing = await Listing.findByIdAndUpdate(id, { ...req.body.listing }, { runValidators: true });
-  res.redirect(`/listings/${id}`);
-}));
 
-//Delete Route
-app.delete("/listings/:id", validateListing, wrapAsync(async (req, res, next) => {
-  let { id } = req.params;
-  const deletedListing = await Listing.findByIdAndDelete(id);
-  res.redirect("/listings");
-}));
 
-// app.get("/testListing", async (req, res) => {
-//   let sampleListing = new Listing({
-//     title: "My New Villa",
-//     description: "By the beach",
-//     price: 1200,
-//     location: "Calangute, Goa",
-//     country: "India",
-//   });
-
-//   await sampleListing.save();
-//   console.log("sample was saved");
-//   res.send("successful testing");
-// });
 
 app.use((req, res, next) => {
-  next(new ExpressError(404, "page not found!"));
+    res.locals.success = req.flash("success");
+    res.locals.error = req.flash("error");
+    next();
 });
 
+// listings
+app.use("/listings", listingRouter);
+
+// Reviews
+app.use("/listings/:id/reviews", reviewRouter);
+
+
+// 404 Handler
+app.use((req, res, next) => {
+    if (
+        req.path === "/favicon.ico" ||
+        req.path.match(/\.(css|js|png|jpg|jpeg|gif|svg)$/)
+    ) {
+        return res.status(204).end();
+    }
+
+    next(new ExpressError(404, "Page not found"));
+});
+
+
+// Error Handler
 app.use((err, req, res, next) => {
-  let { statusCode, message } = err;
-  res.render("error.ejs");
-  //res.status(statusCode || 500).send(message || "Something went wrong!");
+    const statusCode =
+        typeof err.statusCode === "number" ? err.statusCode : 500;
+
+    const message = err.message || "Something went wrong!";
+
+    console.error("Error Caught:", err);
+
+    res.status(statusCode).render("error", {
+        message,
+    });
 });
 
+
+// Start Server
 app.listen(8080, () => {
-  console.log("server is listening to port 8080");
+    console.log("server is listening to port 8080");
 });
