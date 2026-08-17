@@ -9,8 +9,10 @@ const passport = require("passport");
 const LocalStrategy = require("passport-local")
 const ExpressError = require("./utils/ExpressError.js");
 const listingRouter = require("./routes/listing.js");
-const User = require("./models/user.js");
 const reviewRouter = require("./routes/review.js");
+const userRouter = require("./routes/user.js");
+const User = require("./models/user.js");
+const { userInfo } = require("os");
 const MONGO_URL = "mongodb://127.0.0.1:27017/wanderlust";
 
 
@@ -77,9 +79,18 @@ app.use("/listings", listingRouter);
 // Reviews
 app.use("/listings/:id/reviews", reviewRouter);
 
+// User
+app.use("/", userRouter);
 
-// 404 Handler
+
+// app.use((req, res, next) => {
+//     console.log("REQUEST:", req.method, req.originalUrl);
+//     next();
+// });
+
+
 app.use((req, res, next) => {
+
     if (
         req.path === "/favicon.ico" ||
         req.path.match(/\.(css|js|png|jpg|jpeg|gif|svg)$/)
