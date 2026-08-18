@@ -12,8 +12,9 @@ const listingRouter = require("./routes/listing.js");
 const reviewRouter = require("./routes/review.js");
 const userRouter = require("./routes/user.js");
 const User = require("./models/user.js");
-const { userInfo } = require("os");
 const MONGO_URL = "mongodb://127.0.0.1:27017/wanderlust";
+const Listing = require("./models/listing.js");
+const ejsMate = require("ejs-mate");
 
 
 // Database Connection
@@ -26,6 +27,8 @@ main().catch((err) => {
     console.log("Database connection error:", err);
 });
 
+app.engine("ejs", ejsMate);
+app.set("view engine", "ejs");
 
 // App Configuration
 app.set("view engine", "ejs");
@@ -49,11 +52,6 @@ const sessionOptions = {
     },
 };
 
-// Routes
-app.get("/", (req, res) => {
-    res.send("Hi, I am root");
-});
-
 app.use(session(sessionOptions));
 app.use(flash());
 
@@ -70,7 +68,15 @@ passport.deserializeUser(User.deserializeUser());
 app.use((req, res, next) => {
     res.locals.success = req.flash("success");
     res.locals.error = req.flash("error");
+    res.locals.currUser = req.user;
     next();
+});
+
+// Routes
+app.get("/", async (req, res) => {
+    const listings = await Listing.find({}).limit(3);
+
+    res.render("home.ejs", { listings });
 });
 
 // listings

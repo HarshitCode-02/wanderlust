@@ -1,18 +1,26 @@
-<body>
-    <nav class="navbar navbar-expand-md fixed-top bg-body-tertiary ">
-        <div class="container-fluid">
-            <a class="navbar-brand" href="/"><i class="fa-solid fa-globe"></i></a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
-                <div class="navbar-nav">
-                    <a class="nav-link active" href="/">Home</a>
-                    <a class="nav-link" href="/listings">All Listings</a>
-                    <a class="nav-link" href="/listings/new">Add new Listings</a>
+<nav class="navbar navbar-expand-md fixed-top bg-body-tertiary ">
+    <div class="container-fluid">
+        <a class="navbar-brand" href="/"><i class="fa-solid fa-globe"></i></a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+            <div class="navbar-nav">
+                <a class="nav-link active" href="/">Home</a>
+                <a class="nav-link" href="/listings">All Listings</a>
+                <a class="nav-link" href="/listings/new">Add new Listings</a>
+            </div>
+            <div class="navbar-nav ms-auto">
+                <% if(!currUser){ %>
+                    <a class="nav-link active" href="/signup">SignUp</a>
+                    <a class="nav-link" href="/login">Login</a>
 
-                </div>
+                    <%} %>
+                        <% if(currUser){ %>
+                            <a class="nav-link" href="/logout">Logout</a>
+
+                            <%} %>
             </div>
         </div>
-    </nav>
-</body>
+    </div>
+</nav>

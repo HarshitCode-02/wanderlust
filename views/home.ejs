@@ -1,0 +1,161 @@
+<% layout("layouts/boilerplate") %>
+
+<div class="home-page">
+
+    <!-- HERO -->
+    <section class="home-hero">
+        <div class="hero-content">
+
+            <p class="hero-eyebrow">WANDERLUST</p>
+
+            <h1>
+                Find a place<br>
+                you'll love to stay.
+            </h1>
+
+            <p class="hero-text">
+                Discover unique homes, beautiful destinations,
+                and unforgettable stays around the world.
+            </p>
+
+            <!-- SEARCH BOX -->
+            <form class="home-search" action="/listings" method="GET">
+
+                <div class="search-item">
+                    <label for="location">Where</label>
+                    <input
+                        type="text"
+                        id="location"
+                        name="location"
+                        placeholder="Search destinations"
+                    >
+                </div>
+
+                <div class="search-item">
+                    <label for="guests">Guests</label>
+                    <input
+                        type="number"
+                        id="guests"
+                        name="guests"
+                        placeholder="Add guests"
+                        min="1"
+                    >
+                </div>
+
+                <button type="submit" class="search-btn">
+                    <i class="fa-solid fa-magnifying-glass"></i>
+                    Search
+                </button>
+
+            </form>
+
+        </div>
+    </section>
+
+
+    <!-- CATEGORIES -->
+    <section class="home-section">
+
+        <div class="section-header">
+            <div>
+                <p class="section-eyebrow">EXPLORE</p>
+                <h2>Explore by category</h2>
+                <p>Find the perfect place for your next trip.</p>
+            </div>
+
+            <a href="/listings" class="view-all">
+                View all
+                <i class="fa-solid fa-arrow-right"></i>
+            </a>
+        </div>
+
+
+        <div class="category-grid">
+
+            <a href="/listings?category=Homes" class="category-card">
+                <div class="category-icon">
+                    <i class="fa-solid fa-house"></i>
+                </div>
+                <h3>Homes</h3>
+                <p>Comfortable places to call home.</p>
+            </a>
+
+            <a href="/listings?category=Mountains" class="category-card">
+                <div class="category-icon">
+                    <i class="fa-solid fa-mountain"></i>
+                </div>
+                <h3>Mountains</h3>
+                <p>Escape into the mountains.</p>
+            </a>
+
+            <a href="/listings?category=Beach" class="category-card">
+                <div class="category-icon">
+                    <i class="fa-solid fa-umbrella-beach"></i>
+                </div>
+                <h3>Beach</h3>
+                <p>Relax beside the ocean.</p>
+            </a>
+
+            <a href="/listings?category=Nature" class="category-card">
+                <div class="category-icon">
+                    <i class="fa-solid fa-tree"></i>
+                </div>
+                <h3>Nature</h3>
+                <p>Reconnect with the outdoors.</p>
+            </a>
+
+            <a href="/listings?category=City" class="category-card">
+                <div class="category-icon">
+                    <i class="fa-solid fa-city"></i>
+                </div>
+                <h3>City</h3>
+                <p>Stay close to the action.</p>
+            </a>
+
+            <a href="/listings?category=Lakefront" class="category-card">
+                <div class="category-icon">
+                    <i class="fa-solid fa-water"></i>
+                </div>
+                <h3>Lakefront</h3>
+                <p>Wake up beside the water.</p>
+            </a>
+
+        </div>
+
+    </section>
+
+
+    <!-- POPULAR STAYS -->
+    <section class="home-section popular-section">
+
+        <div class="section-header">
+            <div>
+                <p class="section-eyebrow">DISCOVER</p>
+                <h2>Popular stays</h2>
+                <p>Explore some of our most loved destinations.</p>
+            </div>
+
+            <a href="/listings" class="view-all">
+                See all listings
+                <i class="fa-solid fa-arrow-right"></i>
+            </a>
+        </div>
+
+
+        <div class="popular-placeholder">
+            <i class="fa-solid fa-house-chimney"></i>
+
+            <h3>Beautiful stays are waiting for you</h3>
+
+            <p>
+                Browse our listings and find your next destination.
+            </p>
+
+            <a href="/listings" class="browse-btn">
+                Browse listings
+            </a>
+        </div>
+
+    </section>
+
+</div>
