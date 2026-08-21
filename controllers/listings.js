@@ -46,18 +46,24 @@ module.exports.showlisting = (async (req, res, next) => {
     );
 });
 
-module.exports.createlisting = (async (req, res) => {
+module.exports.createlisting = async (req, res) => {
     const newListing = new Listing(req.body.listing);
+
     newListing.owner = req.user._id;
+
+    if (req.file) {
+        newListing.image = {
+            url: `/uploads/${req.file.filename}`,
+            filename: req.file.filename
+        };
+    }
+
     await newListing.save();
 
-    req.flash(
-        "success",
-        "New Listing Created!"
-    );
+    req.flash("success", "New Listing Created!");
 
     res.redirect("/listings");
-});
+};
 
 module.exports.editlisting = (async (req, res, next) => {
     let { id } = req.params;
@@ -81,7 +87,7 @@ module.exports.editlisting = (async (req, res, next) => {
     );
 });
 
-module.exports.upadtelisting=(async (req, res) => {
+module.exports.upadtelisting = (async (req, res) => {
     let { id } = req.params;
 
     const listing = await Listing.findByIdAndUpdate(
@@ -110,7 +116,7 @@ module.exports.upadtelisting=(async (req, res) => {
     res.redirect(`/listings/${id}`);
 });
 
-module.exports.deletelisting=(async (req, res) => {
+module.exports.deletelisting = (async (req, res) => {
     let { id } = req.params;
 
     const deletedListing =
